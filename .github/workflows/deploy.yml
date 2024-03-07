@@ -1,8 +1,5 @@
 name: Playground Build And Deploy
 
-on:
-  workflow_call:
-
 jobs:
   build:
     name: Build & Deploy
