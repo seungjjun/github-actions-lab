@@ -11,5 +11,5 @@ jobs:
     needs: [ build-test ]
     uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
     with:
-      ecr-repository: ${{ secrets.ECR_REPOSITORY_NAME }}
+      ecr-repository: playground-dev
       dockerfile: Dockerfile
