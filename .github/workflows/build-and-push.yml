@@ -1,14 +1,17 @@
 name: Playground Build And Deploy
 
+#on:
+#  workflow_call:
+#    inputs:
+#      ecr-repository:
+#        required: true
+#        type: string
+#      dockerfile:
+#        required: true
+#        type: string
+
 on:
-  workflow_call:
-    inputs:
-      ecr-repository:
-        required: true
-        type: string
-      dockerfile:
-        required: true
-        type: string
+  workflow_dispatch:
 
 jobs:
   build:
@@ -56,7 +59,7 @@ jobs:
         id: build-env
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ inputs.ecr-repository }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "::set-output name=image_tag_version::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
@@ -66,6 +69,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ${{ inputs.dockerfile }}
+          file: Dockerfile
           push: true
           tags: ${{ steps.build-env.outputs.image_tag_version }}

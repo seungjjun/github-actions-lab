@@ -1,0 +1,49 @@
+name: Deploy to EKS
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    name: Deploy to AWS EKS
+    runs-on: ${{ secrets.RUNNER_LABEL }}
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_NAME }}
+          role-session-name: playground-deploy-to-eks
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup kubectl
+        id: kubectl-install
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'v1.23.6'
+
+      - name: Setup kustomize
+        uses: imranismail/setup-kustomize@v1
+        with:
+          kustomize-version: "3.9.3"
+
+      - name: Create kubeconfig
+        env:
+          EKS_CLUSTER: ${{ secrets.EKS_CLUSTER_NAME }}
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name $EKS_CLUSTER
+
+      - name: Find ECR Repository
+        id: ecr-repository
+        env:
+          REPO_NAME: ${{ secrets.ECR_REPOSITORY_NAME }}
+        run: |
+          URI=$(aws ecr describe-repositories --repository-names $REPO_NAME --query 'repositories[0].repositoryUri' --output text)
+          echo "repo_url=$URI" >> "$GITHUB_OUTPUT"
