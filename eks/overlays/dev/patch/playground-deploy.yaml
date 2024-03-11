@@ -1,0 +1,9 @@
+- op: add
+  path: /metadata/namespace
+  value: playground-dev
+- op: add
+  path: /spec/template/spec/containers/0/env/0/value
+  value: dev
+- op: add
+  path: /spec/template/spec/containers/0/image
+  value: PLAYGROUND-IMAGE-URL

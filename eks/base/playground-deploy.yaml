@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playground-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playground-deploy
+  template:
+    metadata:
+      labels:
+        app: playground-deploy
+    spec:
+      containers:
+        - name: playground-deploy
+          imagePullPolicy: Always
+          env:
+            - name: dev
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 512Mi

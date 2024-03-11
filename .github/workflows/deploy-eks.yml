@@ -47,3 +47,12 @@ jobs:
         run: |
           URI=$(aws ecr describe-repositories --repository-names $REPO_NAME --query 'repositories[0].repositoryUri' --output text)
           echo "repo_url=$URI" >> "$GITHUB_OUTPUT"
+
+      - name: Apply k8s
+        env:
+          KUSTOMIZE_PATH: eks/overlays/dev
+          PLAYGROUND_IMAGE_URL: ${{ steps.ecr-repository.outputs.repo_url }}:playground-dev-${{ github.sha }}
+        run: |
+          echo "$PLAYGROUND_IMAGE_URL"
+          (cd $KUSTOMIZE_PATH && kustomize edit set image PLAYGROUND-IMAGE-URL=$PLAYGROUND_IMAGE_URL)
+          kustomize build $KUSTOMIZE_PATH | kubectl apply -f -
