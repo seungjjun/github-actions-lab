@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     name: Deploy to AWS EKS
-    runs-on: ${{ secrets.RUNNER_LABEL }}
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: read
