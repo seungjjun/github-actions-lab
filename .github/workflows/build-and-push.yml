@@ -14,6 +14,9 @@ jobs:
   build:
     name: Build & Deploy
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -28,8 +31,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ env.AWS_ROLE_NAME }}
+          role-session-name: playground-build
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Cache Gradle packages
