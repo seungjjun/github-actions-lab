@@ -4,11 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-test:
-    uses: seungjjun/github-actions-lab/.github/workflows/build_pr.yml@main
-
   playground-build-and-push:
-    needs: [ build-test ]
     uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
     with:
       ecr-repository: playground-dev
