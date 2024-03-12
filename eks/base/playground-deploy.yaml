@@ -17,6 +17,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: dev
+              value: dev
           resources:
             requests:
               memory: 512Mi
