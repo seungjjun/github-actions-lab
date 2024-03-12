@@ -51,7 +51,7 @@ jobs:
       - name: Apply k8s
         env:
           KUSTOMIZE_PATH: eks/overlays/dev
-          PLAYGROUND_IMAGE_URL: ${{ steps.ecr-repository.outputs.repo_url }}:playground-dev
+          PLAYGROUND_IMAGE_URL: ${{ steps.ecr-repository.outputs.repo_url }}:${{ github.sha }}
         run: |
           echo "$PLAYGROUND_IMAGE_URL"
           (cd $KUSTOMIZE_PATH && kustomize edit set image PLAYGROUND-IMAGE-URL=$PLAYGROUND_IMAGE_URL)
