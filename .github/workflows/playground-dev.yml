@@ -11,9 +11,18 @@ on:
           - sample-module
 
 jobs:
-  ${{ inputs.choice }}-build-and-push:
+  github-actions-lab-build-and-push:
+    if: ${{ github.event.inputs.choice == 'github-actions-lab' }}
     uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
     with:
       ecr-repository: playground-dev
-      dockerfile: ${{ inputs.choice }}/Dockerfile
-      choice: ${{ inputs.choice }}
+      dockerfile: github-actions-lab/Dockerfile
+      choice: github-actions-lab
+
+  sample-module-build-and-push:
+    if: ${{ github.event.inputs.choice == 'sample-module' }}
+    uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
+    with:
+      ecr-repository: playground-dev
+      dockerfile: sample-module/Dockerfile
+      choice: sample-module
