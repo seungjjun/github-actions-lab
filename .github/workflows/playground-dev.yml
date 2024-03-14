@@ -3,7 +3,15 @@ name: 'Deploy Test'
 on:
   workflow_dispatch:
     inputs:
-      choice:
+      environment:
+        required: true
+        type: choice
+        description: Choice Module Environment
+        options:
+          - dev
+          - prod
+      module:
+        required: true
         type: choice
         description: Choice Build Module
         options:
@@ -12,7 +20,7 @@ on:
 
 jobs:
   github-actions-lab-build-and-push:
-    if: ${{ github.event.inputs.choice == 'github-actions-lab' }}
+    if: ${{ github.event.inputs.module == 'github-actions-lab' }}
     uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
     with:
       ecr-repository: playground-dev

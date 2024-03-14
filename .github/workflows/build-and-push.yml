@@ -1,27 +1,35 @@
 name: Playground Build And Deploy
 
-on:
-  workflow_call:
-    inputs:
-      ecr-repository:
-        required: true
-        type: string
-      dockerfile:
-        required: true
-        type: string
-      choice:
-        required: true
-        type: string
-
 #on:
-#  workflow_dispatch:
+#  workflow_call:
 #    inputs:
+#      ecr-repository:
+#        required: true
+#        type: string
+#      dockerfile:
+#        required: true
+#        type: string
 #      choice:
-#        type: choice
-#        description: Choice Build Module
-#        options:
-#          - github-actions-lab
-#          - sample-module
+#        required: true
+#        type: string
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        description: Choice Module Environment
+        options:
+          - dev
+          - prod
+      module:
+        required: true
+        type: choice
+        description: Choice Build Module
+        options:
+          - github-actions-lab
+          - sample-module
 
 jobs:
   build:
@@ -73,12 +81,13 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "::set-output name=image_tag_version::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "Selected Environment ${{ inputs.environment }}"
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-docker-image
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./${{ inputs.choice }}/Dockerfile
+          file: ./${{ inputs.module }}/Dockerfile
           push: true
           tags: ${{ steps.build-env.outputs.image_tag_version }}
