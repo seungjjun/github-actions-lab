@@ -2,10 +2,17 @@ name: 'Deploy Test'
 
 on:
   workflow_dispatch:
+    inputs:
+      choice:
+        type: choice
+        description: Choice Build Module
+        options:
+          - github-actions-lab
+          - sample-module
 
 jobs:
-  playground-build-and-push:
+  ${{ inputs.choice }}-build-and-push:
     uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
     with:
       ecr-repository: playground-dev
-      dockerfile: Dockerfile
+      dockerfile: ${{ inputs.choice }}/Dockerfile
