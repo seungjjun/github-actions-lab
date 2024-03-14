@@ -13,9 +13,6 @@ name: Playground Build And Deploy
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        type: environment
-        description: Select the environment
       choice:
         type: choice
         description: Choice Build Module
@@ -73,6 +70,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "::set-output name=image_tag_version::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "choice is ${{ github.event.inputs.choice }}" / ${{ inputs.choice }}
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-docker-image
