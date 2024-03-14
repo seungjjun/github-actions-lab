@@ -12,6 +12,16 @@ name: Playground Build And Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+      choice:
+        type: choice
+        description: Choice Build Module
+        options:
+          - github-actions-lab
+          - sample-module
 
 jobs:
   build:
@@ -69,6 +79,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: /${{ inputs.choice }}/Dockerfile
           push: true
           tags: ${{ steps.build-env.outputs.image_tag_version }}
