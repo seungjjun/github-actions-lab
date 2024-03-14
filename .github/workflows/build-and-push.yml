@@ -77,6 +77,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: /${{ inputs.choice }}/Dockerfile
+          file: ./${{ inputs.choice }}/Dockerfile
           push: true
           tags: ${{ steps.build-env.outputs.image_tag_version }}
