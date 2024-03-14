@@ -12,7 +12,31 @@ on:
 
 jobs:
   ${{ inputs.choice }}-build-and-push:
-    uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
-    with:
-      ecr-repository: playground-dev
-      dockerfile: ${{ inputs.choice }}/Dockerfile
+    build:
+      runs-on: ubuntu-latest
+
+      # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+      permissions:
+        id-token: write
+        contents: read
+
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up JDK 17
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'corretto'
+            java-version: '17'
+
+        - name: Cache Gradle packages
+          uses: actions/cache@v2
+          with:
+            path: |
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+              **/.gradle
+            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+            restore-keys: ${{ runner.os }}-gradle-
+
+        - name: Build and Test with Gradle
+          run: ./${{ inputs.choice }}/gradlew test
