@@ -34,7 +34,7 @@ on:
 jobs:
   build:
     name: Build & Deploy
-    runs-on: ubuntu-latest
+    runs-on: vpc-dev
     permissions:
       id-token: write
       contents: read
