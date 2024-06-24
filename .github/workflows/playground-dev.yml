@@ -19,18 +19,14 @@ on:
           - sample-module
 
 jobs:
-  github-actions-lab-build-and-push:
-    if: ${{ github.event.inputs.module == 'github-actions-lab' }}
+  build-and-push:
+    strategy:
+      matrix:
+        environment: [dev, prod]
+        module: [github-actions-lab, sample-module]
+    if: ${{ github.event.inputs.environment == matrix.environment && github.event.inputs.module == matrix.module }}
     uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
     with:
-      ecr-repository: playground-dev
-      dockerfile: github-actions-lab/Dockerfile
-      choice: github-actions-lab
-
-  sample-module-build-and-push:
-    if: ${{ github.event.inputs.choice == 'sample-module' }}
-    uses: seungjjun/github-actions-lab/.github/workflows/build-and-push.yml@main
-    with:
-      ecr-repository: playground-dev
-      dockerfile: sample-module/Dockerfile
-      choice: sample-module
+      ecr-repository: playground-${{ matrix.environment }}
+      dockerfile: ${{ matrix.module }}/Dockerfile
+      choice: ${{ matrix.module }}
